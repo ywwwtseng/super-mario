@@ -5,6 +5,11 @@ export default class Timer {
 
     this.updateProxy = (time) => {
       accumulatedTime += (time - lastTime) / 1000;
+
+      // never go beyond one second in the simulation phase.
+      if (accumulatedTime > 1) {
+        accumulatedTime = 1;
+      }
   
       while (accumulatedTime > deltaTime) {
         this.update(deltaTime);  

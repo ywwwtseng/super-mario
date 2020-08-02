@@ -26,7 +26,7 @@ Promise.all([
   level.entities.add(mario);
 
   level.comp.layers.push(
-    createCollisionLayer(level),
+    // createCollisionLayer(level),
     createCameraLayer(camera),
   );
   
