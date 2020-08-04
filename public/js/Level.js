@@ -4,7 +4,7 @@ import {Matrix} from './math.js';
 
 export default class Level {
   constructor() {
-    this.gravity = 2000;
+    this.gravity = 1500;
     this.totalTime = 0;
     this.comp = new Compositor();
     this.entities = new Set();
@@ -16,13 +16,13 @@ export default class Level {
     this.entities.forEach(entity => {
       entity.update(deltaTime);
 
-      entity.vel.y += this.gravity * deltaTime;
-
       entity.pos.x += entity.vel.x * deltaTime;
       this.tileCollider.checkX(entity);
 
       entity.pos.y += entity.vel.y * deltaTime;
       this.tileCollider.checkY(entity);
+
+      entity.vel.y += this.gravity * deltaTime;
     });
 
     this.totalTime += deltaTime;
