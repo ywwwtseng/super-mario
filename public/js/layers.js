@@ -74,7 +74,7 @@ export function createCollisionLayer(level) {
     return getIndexOriginal.call(tileResolver, x, y);
   };
 
-  return function drawCollision(context) {
+  return function drawCollision(context, camera) {
     context.strokeStyle = 'blue';
     resolvedTiles.forEach(({x, y}) => {
       context.beginPath();
@@ -82,7 +82,7 @@ export function createCollisionLayer(level) {
         x * tileSize - camera.pos.x,
         y * tileSize - camera.pos.y,
         tileSize,
-        tileSize
+        tileSize,
       );
       context.stroke();
     });
