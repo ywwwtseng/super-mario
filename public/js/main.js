@@ -1,38 +1,39 @@
 import Camera from './Camera.js';
 import Timer from './Timer.js';
 import {loadLevel} from './loaders/level.js';
-import {createMario} from './entities.js';
-// import {createCollisionLayer, createCameraLayer} from './layers.js';
+import {loadEntities} from './entities.js';
+import {createCollisionLayer} from './layers.js';
 import {setupKeyborad} from './input.js';
-// import {setupMouseControl} from './debug.js';
 import Keyboard from './KeyboardState.js';
-
-
-
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
 
 Promise.all([
-  createMario(),
+  loadEntities(),
   loadLevel('1-1'),
 ])
-.then(([mario, level]) => {
+.then(([entities, level]) => {
   const camera = new Camera();
 
+  const mario = entities.mario();
   mario.pos.set(64, 180);
-
   level.entities.add(mario);
 
-  // level.comp.layers.push(
-  //   createCollisionLayer(level),
-  //   createCameraLayer(camera),
-  // );
+  const goomba = entities.goomba();
+  goomba.pos.x = 220;
+  level.entities.add(goomba);
+
+  const koopa = entities.koopa();
+  koopa.pos.x = 260;
+  level.entities.add(koopa);
+
+  level.comp.layers.push(
+    createCollisionLayer(level),
+  );
   
   const input = setupKeyborad(mario);
   input.listenTo(window);
-
-  // setupMouseControl(canvas, mario, camera);
 
   const timer = new Timer(1/60);
   timer.update = function update(deltaTime) {
