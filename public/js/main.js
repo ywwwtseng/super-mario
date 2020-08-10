@@ -4,7 +4,7 @@ import PlayerController from './traits/PlayerController.js';
 import Timer from './Timer.js';
 import {createLevelLoader} from './loaders/level.js';
 import {loadEntities} from './entities.js';
-import {createCollisionLayer} from './layers.js';
+import {createCollisionLayer} from './layers/collection.js';
 import {setupKeyborad} from './input.js';
 import Keyboard from './KeyboardState.js';
 
