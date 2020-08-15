@@ -7,7 +7,8 @@ export function loadMusicSheet(name) {
       const musicPlayer = new MusicPlayer();
       for (const [name, track] of Object.entries(musicSheet)) {
         musicPlayer.addTrack(name, track.url);
-        return musicPlayer;
       }
+
+      return musicPlayer;
     });
 }
