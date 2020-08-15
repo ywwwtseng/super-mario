@@ -13,5 +13,5 @@ export default class EntityCollider {
         subject.collides(canditate);
       }
     });
-  }
+  } 
 }
