@@ -54,7 +54,7 @@ export function createLevelLoader(entityFactory) {
       .then(levelSpec => Promise.all([
         levelSpec,
         loadSpriteSheet(levelSpec.spriteSheet),
-        loadMusicSheet(levelSpec.spriteSheet),
+        loadMusicSheet(levelSpec.musicSheet),
       ]))
       .then(([levelSpec, backgroundSprites, musicPlayer]) => {
         const level = new Level();
