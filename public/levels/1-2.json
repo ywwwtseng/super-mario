@@ -1,10 +1,10 @@
 {
-    "spriteSheet": "overworld",
-    "musicSheet": "slient",
+    "spriteSheet": "underworld",
+    "musicSheet": "underworld",
     "patternSheet": "overworld-pattern",
 
     "layers": [
-        { 
+        {
             "tiles": [
                 {
                     "name": "sky",
@@ -22,20 +22,6 @@
                         [
                             0, 212,
                             13, 2
-                        ]
-                    ]
-                }
-            ]
-        },
-        {
-            "tiles": [
-                {
-                    "name": "coin",
-                    "type": "coin",
-                    "ranges": [
-                        [
-                            6, 100,
-                            8, 5
                         ]
                     ]
                 }

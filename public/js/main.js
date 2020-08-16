@@ -1,4 +1,3 @@
-import Camera from './Camera.js';
 import Timer from './Timer.js';
 import {createLevelLoader} from './loaders/level.js';
 import {loadFont} from './loaders/font.js';
@@ -10,7 +9,7 @@ import {setupKeyborad} from './input.js';
 import Keyboard from './KeyboardState.js';
 
 async function main(canvas) {
-  const context = canvas.getContext('2d');
+  const videoContext = canvas.getContext('2d');
   const audioContext = new AudioContext();
 
   const [entityFactory, font] = await Promise.all([
@@ -19,9 +18,7 @@ async function main(canvas) {
   ]);
 
   const loadLevel = await createLevelLoader(entityFactory);
-  const level = await loadLevel('1-1');
-
-  const camera = new Camera();
+  const level = await loadLevel('1-2');
 
   const mario = createPlayer(entityFactory.mario());
   mario.player.name = 'MARIO';
@@ -33,11 +30,12 @@ async function main(canvas) {
   level.comp.layers.push(createCollisionLayer(level));
   level.comp.layers.push(createDashboardLayer(font, level));
   
-  const input = setupKeyborad(mario);
-  input.listenTo(window);
+  const inputRouter = setupKeyborad(window);
+  inputRouter.addReceiver(mario);
 
   const gameContext = {
     audioContext,
+    videoContext,
     entityFactory,
     deltaTime: null,
   };
@@ -46,10 +44,7 @@ async function main(canvas) {
   timer.update = function update(deltaTime) {
     gameContext.deltaTime = deltaTime;
     level.update(gameContext);
-
-    camera.pos.x = Math.max(0, mario.pos.x - 100);
-
-    level.comp.draw(context, camera);
+    level.draw(gameContext);
   }
 
   timer.start();
