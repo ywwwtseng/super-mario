@@ -1,10 +1,10 @@
 {
-    "spriteSheet": "underworld",
-    "musicSheet": "underworld",
+    "spriteSheet": "overworld",
+    "musicSheet": "slient",
     "patternSheet": "overworld-pattern",
 
     "layers": [
-        {
+        { 
             "tiles": [
                 {
                     "name": "sky",
