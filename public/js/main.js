@@ -6,12 +6,14 @@ import {loadEntities} from './entities.js';
 import {createPlayer, createPlayerEnv} from './player.js';
 import {createColorLayer} from './layers/color.js';
 import {createCollisionLayer} from './layers/collection.js';
+import {createTextLayer} from './layers/text.js';
 import {createDashboardLayer} from './layers/dashboard.js';
 import {setupKeyborad} from './input.js';
 import Keyboard from './KeyboardState.js';
 import SceneRunner from './SceneRunner.js';
 import { createPlayerProgressLayer } from './layers/player-progress.js';
-import CompositionScene from './CompositionScene.js';
+import Scene from './Scene.js';
+import TimedScene from './TimedScene.js';
 
 async function main(canvas) {
   const videoContext = canvas.getContext('2d');
@@ -31,11 +33,16 @@ async function main(canvas) {
   const inputRouter = setupKeyborad(window);
   inputRouter.addReceiver(mario);
 
-  let shouldUpdate = false;
-
   async function runLevel(name) {
     console.log('Loading', name);
-    shouldUpdate = false;
+
+    const loadScreen = new Scene();
+    loadScreen.comp.layers.push(createColorLayer('#000'));
+    loadScreen.comp.layers.push(createTextLayer(font, `Loading ${name}...`));
+    sceneRunner.addScene(loadScreen);
+    sceneRunner.runNext();
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const level = await loadLevel(name);
 
@@ -59,7 +66,8 @@ async function main(canvas) {
     const playerEnv = new createPlayerEnv(mario);
     level.entities.add(playerEnv);
 
-    const waitScreen = new CompositionScene();
+    const waitScreen = new TimedScene();
+    waitScreen.countDown = 2;
     waitScreen.comp.layers.push(createColorLayer('#000'));
     waitScreen.comp.layers.push(dashboardLayer);
     waitScreen.comp.layers.push(playerProgressLayer);
@@ -70,8 +78,6 @@ async function main(canvas) {
     sceneRunner.addScene(level);
 
     sceneRunner.runNext();
-
-    shouldUpdate = true;
   }
 
   const gameContext = {
@@ -84,9 +90,7 @@ async function main(canvas) {
   const timer = new Timer(1/60);
   timer.update = function update(deltaTime) {
     gameContext.deltaTime = deltaTime;
-    if (shouldUpdate) {
-      sceneRunner.update(gameContext);
-    }
+    sceneRunner.update(gameContext);
   }
 
   timer.start();
