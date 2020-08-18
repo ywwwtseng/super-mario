@@ -3,7 +3,7 @@ import Timer from './Timer.js';
 import {createLevelLoader} from './loaders/level.js';
 import {loadFont} from './loaders/font.js';
 import {loadEntities} from './entities.js';
-import {createPlayer, createPlayerEnv} from './player.js';
+import {makePlayer, createPlayerEnv, findPlayers} from './player.js';
 import {createColorLayer} from './layers/color.js';
 import {createCollisionLayer} from './layers/collection.js';
 import {createTextLayer} from './layers/text.js';
@@ -28,34 +28,30 @@ async function main(canvas) {
 
   const sceneRunner = new SceneRunner();
 
-  const mario = createPlayer(entityFactory.mario());
-  mario.player.name = 'MARIO';  
+  const mario = entityFactory.mario();
+  makePlayer(mario, 'MARIO');
+  window.mario = mario;
   const inputRouter = setupKeyborad(window);
   inputRouter.addReceiver(mario);
 
   async function runLevel(name) {
-    console.log('Loading', name);
-
     const loadScreen = new Scene();
     loadScreen.comp.layers.push(createColorLayer('#000'));
     loadScreen.comp.layers.push(createTextLayer(font, `Loading ${name}...`));
     sceneRunner.addScene(loadScreen);
     sceneRunner.runNext();
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     const level = await loadLevel(name);
 
     level.events.listen(Level.EVENT_TRIGGER, (spec, trigger, touches) => {
+      console.log(touches);
       if (spec.type === 'goto') {
-        for (const entity of touches) {
-          if (entity.player) {
-            runLevel(spec.name);
-            return;
-          }
+        for (const _ of findPlayers(touches)) {
+          runLevel(spec.name);
+          return;
         }
       }
-    });
+    }); 
 
     const dashboardLayer = createDashboardLayer(font, level);
     const playerProgressLayer = createPlayerProgressLayer(font, level);
@@ -95,7 +91,7 @@ async function main(canvas) {
 
   timer.start();
   
-  runLevel('debug-progression');
+  runLevel('1-1');
 }
 
 

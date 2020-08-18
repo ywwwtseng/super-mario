@@ -2,6 +2,7 @@ import {Vec2} from './math.js';
 import AudioBoard from './AudioBoard.js';
 import BoundingBox from './BoundingBox.js';
 import EventBuffer from './EventBuffer.js';
+import Trait from './Trait.js';
 
 export const Sides = {
   TOP: Symbol('top'),
@@ -9,44 +10,6 @@ export const Sides = {
   LEFT: Symbol('left'),
   RIGHT: Symbol('right'),
 };
-
-export class Trait {
-  static EVENT_TASK = Symbol('task');
-
-  constructor(name) {
-    this.NAME = name;
-    
-    this.listeners = [];
-  }
-
-  listen(name, callback, count = Infinity) {
-    const listener = {name, callback, count};
-    this.listeners.push(listener);
-  }
-
-  finalize(entity) {
-    this.listeners = this.listeners.filter(listener => {
-      entity.events.process(listener.name, listener.callback);
-      return --listener.count;
-    });
-  }
-
-  queue(task) {
-    this.listen(Trait.EVENT_TASK, task, 1);
-  }
-
-  collides(us, them) {
-
-  }
-
-  obstruct() {
-
-  }
-
-  update() {
-
-  }
-}
 
 export default class Entity {
   constructor() {
@@ -62,12 +25,11 @@ export default class Entity {
     this.bounds = new BoundingBox(this.pos, this.size, this.offset);
     this.lifetime = 0;
 
-    this.traits = [];
+    this.traits = new Map();
   }
 
   addTrait(trait) {
-    this.traits.push(trait);
-    this[trait.NAME] = trait;
+    this.traits.set(trait.constructor, trait);
   }
 
   collides(candidate) {
