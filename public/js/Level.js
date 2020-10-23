@@ -3,7 +3,7 @@ import Compositor from './Compositor.js';
 import MusicController from './MusicController.js';
 import EventEmitter from './EventEmitter.js';
 import EntityCollider from './EntityCollider.js';
-import Sence from './Scene.js';
+import Scene from './Scene.js';
 import TileCollider from './TileCollider.js';
 import { findPlayers } from './player.js';
 
@@ -13,7 +13,7 @@ function focusPlayer(level) {
   }
 }
 
-export default class Level extends Sence {
+export default class Level extends Scene {
   static EVENT_TRIGGER = Symbol('trigger');
 
   constructor() {
